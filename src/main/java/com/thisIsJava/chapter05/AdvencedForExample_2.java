@@ -1,6 +1,6 @@
-package com.chapter05;
+package com.thisIsJava.chapter05;
 // 향상된 for문 ( : ) II
-public class Sample02_a {
+public class AdvencedForExample_2 {
   public static void main(String[] args) {
     
     int[] scores = { 95, 71, 84, 93, 87 };

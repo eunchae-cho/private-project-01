@@ -1,4 +1,4 @@
-package com.chapter03;
+package com.thisIsJava.chapter03;
 // 오버플로우 탐지
 // safeAdd 사용
 

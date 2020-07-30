@@ -2,7 +2,7 @@
 // 두 개의 주사위를 던졌을 때 나오는 눈을 (눈1,눈2)로 출력하고
 // 눈의 합이 5가 되면 계속 주사위를 던지고 아니면 실행 멈추기
 
-package com.chapter04;
+package com.thisIsJava.chapter04;
 
 public class Ex04 {
   public static void main(String[] args) {

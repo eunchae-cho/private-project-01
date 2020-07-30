@@ -1,7 +1,7 @@
-package com.chapter05;
+package com.thisIsJava.chapter05;
 // 다차원 배열
 
-public class Sample01 {
+public class ArrayInArrayExample {
   public static void main(String[] args) {
     
     

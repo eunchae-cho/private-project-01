@@ -1,6 +1,6 @@
 // for문을 이용하여 삼각형 찍기
 
-package com.chapter04;
+package com.thisIsJava.chapter04;
 
 public class Ex06 {
   public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package com.chapter03;
+package com.thisIsJava.chapter03;
 
 public class Ex07 {
   public static void main(String[] args) {

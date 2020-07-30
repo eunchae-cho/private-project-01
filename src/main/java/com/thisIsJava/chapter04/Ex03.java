@@ -1,6 +1,6 @@
 // for문을 이용해서 1부터 100까지의 정수 중 3의 배수의 총합
 
-package com.chapter04;
+package com.thisIsJava.chapter04;
 
 public class Ex03 {
   public static void main(String[] args) {

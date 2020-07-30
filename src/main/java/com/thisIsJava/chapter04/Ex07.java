@@ -1,7 +1,7 @@
 // while문과 Scanner를 이용해서 예금,출금,조회,종료 기능을 제공
 
 
-package com.chapter04;
+package com.thisIsJava.chapter04;
 
 import java.util.Scanner;
 
