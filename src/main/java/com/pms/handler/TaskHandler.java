@@ -1,12 +1,12 @@
 package com.pms.handler;
 
 import com.pms.domain.Task;
-import com.pms.util.ArrayList;
+import com.pms.util.LinkedList;
 import com.pms.util.Prompt;
 
 
 public class TaskHandler {
-	ArrayList<Task> taskList = new ArrayList<>();
+	LinkedList<Task> taskList = new LinkedList<>();
 
 	MemberHandler memberHandler;
 

@@ -1,12 +1,12 @@
 package com.pms.handler;
 
 import com.pms.domain.Board;
-import com.pms.util.ArrayList;
+import com.pms.util.LinkedList;
 import com.pms.util.Prompt;
 
 
 public class BoardHandler {
-	ArrayList<Board> boardList = new ArrayList<>();
+	LinkedList<Board> boardList = new LinkedList<>();
 
 	public void add() {
 		Board b = new Board();

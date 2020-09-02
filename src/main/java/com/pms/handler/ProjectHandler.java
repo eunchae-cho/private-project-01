@@ -1,11 +1,11 @@
 package com.pms.handler;
 
 import com.pms.domain.Project;
-import com.pms.util.ArrayList;
+import com.pms.util.LinkedList;
 import com.pms.util.Prompt;
 
 public class ProjectHandler {
-	ArrayList<Project> projectList = new ArrayList<>();
+	LinkedList<Project> projectList = new LinkedList<>();
 
 	MemberHandler memberHandler;
 
