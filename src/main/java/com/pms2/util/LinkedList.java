@@ -190,7 +190,7 @@ public class LinkedList<E>  implements Cloneable{
 	public LinkedList<E> clone() throws CloneNotSupportedException {
 		LinkedList<E> newList = new LinkedList();
 		Object[] values = (Object[]) this.toArray();
-		for (Object value : values) {
+		for (Object value : values) {  
 			newList.add((E) value);
 		}
 		return newList;

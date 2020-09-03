@@ -1,22 +1,42 @@
 package com.pms;
 
 
+import com.pms.domain.Board;
+import com.pms.domain.Member;
+import com.pms.domain.Project;
+import com.pms.domain.Task;
 import com.pms.handler.BoardHandler;
 import com.pms.handler.MemberHandler;
 import com.pms.handler.ProjectHandler;
 import com.pms.handler.TaskHandler;
+import com.pms.util.ArrayList;
+import com.pms.util.LinkedList;
+import com.pms.util.AbstractList;
 import com.pms.util.Prompt;
 import com.pms.util.Queue;
 import com.pms.util.Stack;
 
 
+
+
 public class App {
 	public static void main(String[] args) {
 
-		BoardHandler boardHandler = new BoardHandler();
-		MemberHandler memberHandler = new MemberHandler();
-		ProjectHandler projectHandler = new ProjectHandler(memberHandler);
-		TaskHandler taskHandler = new TaskHandler(memberHandler);
+		// BoardHandler가 작업하는데 의존 객체를 이렇게 외부에서 생성자를 통해 주입(DI)
+		// 이렇게 하면 의존 객체의 교체가 쉬워짐 - LinkedList를 쓸지 ArrayList를 쓸지 여기서 선택가능
+		AbstractList<Board> boardList = new ArrayList<>();
+		AbstractList<Member> memberList = new ArrayList<>();
+		AbstractList<Project> projectList = new LinkedList<>();
+		AbstractList<Task> taskList = new LinkedList<>();
+		BoardHandler boardHandler = new BoardHandler(boardList);
+		MemberHandler memberHandler = new MemberHandler(memberList);
+		ProjectHandler projectHandler = new ProjectHandler(projectList,memberHandler);
+		TaskHandler taskHandler = new TaskHandler(taskList,memberHandler);
+
+		// 추상 클래스 - 인스턴스 생성 불가능
+		// 			왜냐하면 추상클래스의 역할은 서브클래스를 위한 용도이기 때문
+		// List<Board> list = new List<>(); 불가능
+		// List<Board> list = new ArrayList<>(); 이건 가능!
 
 		Stack<String> commandList = new Stack<>();
 		Queue<String> commandList2 = new Queue<>();

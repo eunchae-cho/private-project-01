@@ -3,12 +3,18 @@ package com.pms.handler;
 import java.sql.Date;
 
 import com.pms.domain.Member;
-import com.pms.util.LinkedList;
+import com.pms.util.AbstractList;
 import com.pms.util.Prompt;
 
 
+
 public class MemberHandler {
-	LinkedList<Member> memberList = new LinkedList<>();
+
+	AbstractList<Member> memberList = new AbstractList<>();
+
+	public MemberHandler(AbstractList<Member> list) {
+		this.memberList = list;
+	}
 
 	public void add() {
 		Member m = new Member();

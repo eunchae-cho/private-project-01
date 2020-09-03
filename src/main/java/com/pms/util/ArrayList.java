@@ -2,11 +2,10 @@ package com.pms.util;
 
 import java.util.Arrays;
 
-public class ArrayList<E> {
+public class ArrayList<E> extends AbstractList<E> {
 
 	private static final int DEFAULT_CAPACITY = 100;
 	private Object[] elementData;
-	private int size;
 
 	public ArrayList() {
 		elementData = new Object[DEFAULT_CAPACITY];
@@ -20,14 +19,13 @@ public class ArrayList<E> {
 		}
 	}
 
-	public void add(E e) {
+	@Override
+	public boolean add(E e) {
 		if (size == elementData.length) {
-			int oldCapacity = elementData.length;
-			int newCapacity = oldCapacity + (oldCapacity >> 1);
-			elementData = Arrays.copyOf(elementData, newCapacity);
-			System.out.printf("새 배열 %d 생성!\n",newCapacity);
+			grow();
 		}
 		elementData[size++] = e;
+		return true;
 	}
 
 	private void grow() {
@@ -35,6 +33,7 @@ public class ArrayList<E> {
 		elementData = Arrays.copyOf(elementData, newCapacity);
 	}
 
+	@Override
 	public void add(int index, E element) {
 		if (index < 0 || index >= size) {
 			throw new ArrayIndexOutOfBoundsException("인덱스초과");
@@ -49,6 +48,7 @@ public class ArrayList<E> {
 		size++;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public E get(int index) {
 		if (index < 0 || index >= size) {
@@ -57,6 +57,7 @@ public class ArrayList<E> {
 		return (E) elementData[index];
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public E set(int index, E element) {
 		if (index < 0 || index >= size) {
@@ -67,6 +68,7 @@ public class ArrayList<E> {
 		return (E) old;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public E remove(int index) {
 		if (index < 0 || index >= size) {
@@ -80,10 +82,7 @@ public class ArrayList<E> {
 		return (E) old;
 	}
 
-	public int size() {
-		return this.size;
-	}
-
+	@Override
 	@SuppressWarnings("unchecked")
 	public E[] toArray(E[] arrayType) {
 		if (arrayType.length < this.size) {
@@ -93,6 +92,7 @@ public class ArrayList<E> {
 		return arrayType;
 	}
 
+	@Override
 	public Object[] toArray() {
 		return Arrays.copyOf(elementData, size);
 	}

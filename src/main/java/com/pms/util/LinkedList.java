@@ -15,7 +15,7 @@ import java.lang.reflect.Array;
 // 9) 목록의 데이터를 새 배열에 담아 리턴하는 toArray() 메서드를 정의한다.
 // 10) 인스턴스 필드에 대해 캡슐화를 적용한다.
 //    - 목록 크기를 리턴하는 size()를 추가로 정의한다.
-public class LinkedList<E> {
+public class LinkedList<E> extends AbstractList<E> {
 
 	// 값을 찾을 때는 첫 번째 노드부터 따라간다.
 	private Node<E> first;
@@ -23,8 +23,6 @@ public class LinkedList<E> {
 	// 값을 추가할 때는 마지막 노드에 연결한다.
 	private Node<E> last;
 
-	// 목록 크기를 보관한다.
-	private int size;
 
 	// 용도?
 	// - Node 클래스는 목록에서 각 항목의 값을 보관하는 객체로 역할을 수행한다.
@@ -42,6 +40,7 @@ public class LinkedList<E> {
 		}
 	}
 
+	@Override
 	public boolean add(E e) {
 		Node<E> node = new Node<>();
 		node.value = e;
@@ -58,6 +57,7 @@ public class LinkedList<E> {
 		return true;
 	}
 
+	@Override
 	public E get(int index) {
 		if (index < 0 || index >= this.size) {
 			throw new IndexOutOfBoundsException("인덱스가 유효하지 않습니다.");
@@ -70,6 +70,7 @@ public class LinkedList<E> {
 		return cursor.value;
 	}
 
+	@Override
 	public void add(int index, E element) {
 		if (index < 0 || index > this.size) {
 			throw new IndexOutOfBoundsException("인덱스가 유효하지 않습니다.");
@@ -98,6 +99,7 @@ public class LinkedList<E> {
 		}
 	}
 
+	@Override
 	public E remove(int index) {
 		if (index < 0 || index >= this.size) {
 			throw new IndexOutOfBoundsException("인덱스가 유효하지 않습니다.");
@@ -128,6 +130,7 @@ public class LinkedList<E> {
 		return old.value;
 	}
 
+	@Override
 	public E set(int index, E element) {
 		if (index < 0 || index >= this.size) {
 			throw new IndexOutOfBoundsException("인덱스가 유효하지 않습니다.");
@@ -144,6 +147,7 @@ public class LinkedList<E> {
 		return old;
 	}
 
+	@Override
 	public Object[] toArray() {
 		Object[] arr = new Object[this.size];
 
@@ -158,10 +162,8 @@ public class LinkedList<E> {
 		return arr;
 	}
 
-	public int size() {
-		return this.size;
-	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public E[] toArray(E[] arr) {
 		if (arr.length < size) {
