@@ -1,4 +1,4 @@
-package com.oop.ex09;
+package com.oop.ex09.b;
 
 public interface A3 {
 

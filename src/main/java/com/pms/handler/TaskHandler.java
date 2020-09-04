@@ -1,18 +1,19 @@
 package com.pms.handler;
 
 import com.pms.domain.Task;
-import com.pms.util.AbstractList;
+import com.pms.util.ArrayList;
+import com.pms.util.List;
 import com.pms.util.Prompt;
 
 
 
 public class TaskHandler {
-	AbstractList<Task> taskList = new AbstractList<>();
+	List<Task> taskList = new ArrayList<>();
 
 
 	MemberHandler memberHandler;
 
-	public TaskHandler(AbstractList<Task> list, MemberHandler memberHandler) {
+	public TaskHandler(List<Task> list, MemberHandler memberHandler) {
 		this.taskList = list;
 		this.memberHandler = memberHandler;
 	}

@@ -1,4 +1,4 @@
-package com.oop.ex09;
+package com.oop.ex09.b;
 
 public interface A4 {
 	// 인터페이스는 규칙이기 때문에 인스턴스를 만들 수 없다.

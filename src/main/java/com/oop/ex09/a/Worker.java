@@ -1,4 +1,4 @@
-package com.oop.ex09;
+package com.oop.ex09.a;
 
 public interface Worker {
 	

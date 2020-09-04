@@ -3,16 +3,17 @@ package com.pms.handler;
 import java.sql.Date;
 
 import com.pms.domain.Member;
-import com.pms.util.AbstractList;
+import com.pms.util.ArrayList;
+import com.pms.util.List;
 import com.pms.util.Prompt;
 
 
 
 public class MemberHandler {
 
-	AbstractList<Member> memberList = new AbstractList<>();
+	List<Member> memberList = new ArrayList<>();
 
-	public MemberHandler(AbstractList<Member> list) {
+	public MemberHandler(List<Member> list) {
 		this.memberList = list;
 	}
 
