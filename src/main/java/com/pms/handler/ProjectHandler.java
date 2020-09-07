@@ -2,6 +2,7 @@ package com.pms.handler;
 
 import com.pms.domain.Project;
 import com.pms.util.ArrayList;
+import com.pms.util.Iterator;
 import com.pms.util.List;
 import com.pms.util.Prompt;
 
@@ -61,13 +62,13 @@ public class ProjectHandler {
 
 	public void list() {
 		System.out.println("[프로젝트 목록]");
-		for (int i = 0; i < projectList.size(); i++) {
-			Project p = projectList.get(i);
+		Iterator<Project> iterator = projectList.iterator();
+		while (iterator.hasNext()) {
+			Project p = iterator.next();
 			System.out.printf("%d, %s, %s, %s, %s, %s, %s\n",
 					p.getNum(),p.getTitel(),p.getContent(),p.getStart(),
 					p.getEnd(),p.getOwner(),p.getMembers());
 		}
-
 	}
 
 }

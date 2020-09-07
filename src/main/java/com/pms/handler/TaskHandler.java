@@ -2,8 +2,10 @@ package com.pms.handler;
 
 import com.pms.domain.Task;
 import com.pms.util.ArrayList;
+import com.pms.util.Iterator;
 import com.pms.util.List;
 import com.pms.util.Prompt;
+
 
 
 
@@ -42,8 +44,10 @@ public class TaskHandler {
 	public void list() {
 		System.out.println("[작업 목록]");
 		String stateLabel = null ;
-		for (int i = 0; i < taskList.size(); i++) {
-			Task t = taskList.get(i);
+
+		Iterator<Task> iterator = taskList.iterator();
+		while (iterator.hasNext()) {
+			Task t = iterator.next();
 			switch (t.getStatus()) {
 			case 1:
 				stateLabel = "진행중"; break;

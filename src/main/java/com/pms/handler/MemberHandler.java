@@ -4,8 +4,10 @@ import java.sql.Date;
 
 import com.pms.domain.Member;
 import com.pms.util.ArrayList;
+import com.pms.util.Iterator;
 import com.pms.util.List;
 import com.pms.util.Prompt;
+
 
 
 
@@ -33,13 +35,16 @@ public class MemberHandler {
 
 	public void list() {
 		System.out.println("[회원 목록]");
-		for (int i = 0; i < memberList.size(); i++) {
-			Member m = memberList.get(i);
+
+		Iterator<Member> iterator = memberList.iterator();
+		while (iterator.hasNext()) {
+			Member m = iterator.next();
 			System.out.printf("%d, %s, %s, %s, %s, %s, %s\n",
 					m.getNum(),m.getName(),m.getEmail(),m.getPassword(),
 					m.getPhoto(),m.getTel(),m.getRegisteredDate());
 		}
 	}
+
 
 	public Member findByName(String name) {
 		for (int i = 0; i < memberList.size(); i++) {

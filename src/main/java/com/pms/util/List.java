@@ -10,4 +10,6 @@ public interface List<E> {
 	Object[] toArray();
 	E[] toArray(E[] arr);
 
+	// 컬렉션의 값을 조회해주는 Iterator 구현체를 제공해주는 메서드
+	Iterator<E> iterator();
 }

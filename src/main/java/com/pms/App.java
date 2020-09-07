@@ -1,6 +1,7 @@
 package com.pms;
 
 
+
 import com.pms.domain.Board;
 import com.pms.domain.Member;
 import com.pms.domain.Project;
@@ -11,10 +12,12 @@ import com.pms.handler.ProjectHandler;
 import com.pms.handler.TaskHandler;
 import com.pms.util.AbstractList;
 import com.pms.util.ArrayList;
+import com.pms.util.Iterator;
 import com.pms.util.LinkedList;
 import com.pms.util.Prompt;
 import com.pms.util.Queue;
 import com.pms.util.Stack;
+
 
 
 
@@ -58,8 +61,10 @@ public class App {
 				case "/board/add":boardHandler.add();break;
 				case "/board/list":boardHandler.list();break;
 				case "/board/detail":boardHandler.detail();break;
-				case "history":printCommandHistory(commandList);break;
-				case "history2":printCommandHistory2(commandList2);break;
+				case "/board/update":boardHandler.update();break;
+				case "/board/delete":boardHandler.delete();break;
+				case "history":printCommandHistory(commandList.iterator());break;
+				case "history2":printCommandHistory(commandList2.iterator());break;
 				case "quit":
 				case "exit":
 					System.out.println("안녕!");
@@ -72,13 +77,13 @@ public class App {
 		Prompt.close();
 	}
 
-	private static void printCommandHistory(Stack<String> commandList) {
+	private static void printCommandHistory(Iterator<String> iterator) {
 		try {
-			Stack<String> commandStack = commandList.clone();
-			for (int count = 1; !commandStack.empty(); count++) {
-				System.out.println(commandStack.pop());
+			int count = 1;
+			while (iterator.hasNext()) {
+				System.out.println(iterator.next());
 
-				if ((count % 5) == 0) {
+				if ((count++ % 5) == 0) {
 					String response = Prompt.inputString(":");
 					if (response.equalsIgnoreCase("q")) {
 						break;
@@ -87,24 +92,6 @@ public class App {
 			}
 		} catch (Exception e) {
 			System.out.println("history중 오류발생!");
-		}
-	}
-
-	private static void printCommandHistory2(Queue<String> commandList2) {
-		try {
-			Queue<String> commandQueue = commandList2.clone();
-			for (int count = 1; commandQueue.size() > 0; count++) {
-				System.out.println(commandQueue.poll());
-
-				if ((count % 5) == 0) {
-					String response = Prompt.inputString(":");
-					if (response.equalsIgnoreCase("q")) {
-						break;
-					}
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("history2중 오류 발생!");
 		}
 	}
 }

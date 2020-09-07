@@ -1,9 +1,14 @@
 package com.pms.handler;
 
+import java.sql.Date;
+
 import com.pms.domain.Board;
 import com.pms.util.ArrayList;
+import com.pms.util.Iterator;
 import com.pms.util.List;
 import com.pms.util.Prompt;
+
+
 
 
 public class BoardHandler {
@@ -26,20 +31,26 @@ public class BoardHandler {
 		b.setTitel(Prompt.inputString("제목: "));
 		b.setContent(Prompt.inputString("내용: "));
 		b.setWriter(Prompt.inputString("작성자: "));
+		b.setRegisteredDate(new Date(System.currentTimeMillis()));
+		b.setViewCount(0);
 		boardList.add(b);
+		System.out.println("게시물이 등록되었습니다.");
 	}	
 
 
 	public void list() {
 		System.out.println("[게시물 목록]");
-		for (int i = 0; i < boardList.size(); i++) {
-			Board b = boardList.get(i);
+
+		Iterator<Board> iterator = boardList.iterator();
+
+		while (iterator.hasNext()) {
+			Board b = iterator.next();
 			System.out.printf("%d, %s, %s, %s, %s, %d\n",
 					b.getNum(),b.getTitel(),b.getContent(),
 					b.getWriter(), b.getRegisteredDate(), b.getViewCount());
 		}
-
 	}
+
 
 	public void detail() {
 		System.out.println("[게시물 상세보기]");
@@ -89,6 +100,16 @@ public class BoardHandler {
 
 	}
 
+	public void delete() {
+		System.out.println("[게시물 삭제]");
+		int num = Prompt.inputInt("번호: ");
+		int index = indexOf(num);
+
+		if (index == -1) {
+			System.out.println("해당 게시물의 번호가 없습니다.");
+		}
+	}
+
 	private Board findByNum(int num) {
 		for (int i = 0; i < boardList.size(); i++) {
 			Board board = boardList.get(i);
@@ -97,5 +118,15 @@ public class BoardHandler {
 			}
 		}
 		return null;
+	}
+
+	private int indexOf(int num) {
+		for (int i = 0; i < boardList.size(); i++) {
+			Board b = boardList.get(i);
+			if(b.getNum() == num) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }
