@@ -13,30 +13,24 @@ public abstract class AbstractList<E> implements List<E> {
 	// 컬렉션에서 목록 조회를 담당할 Iterator 구현체를 리턴
 	@Override
 	public Iterator<E> iterator() {
-		return new ListIterator<E>(this);
-	}
+		class ListIterator<T> implements Iterator<T>{
+			int cursor;
 
-	private static class ListIterator<E> implements Iterator<E>{
+			@Override
+			public boolean hasNext() {
+				return cursor < size();
+			}
 
-		List<E> list;
-		int cursor;
+			@SuppressWarnings("unchecked")
+			@Override
+			public T next() {
+				if (cursor == size())
+					throw new NoSuchElementException();
 
-		public ListIterator(List<E> list) {
-			this.list = list;
+				return (T) get(cursor++);
+			}
 		}
-
-		@Override
-		public boolean hasNext() {
-			return cursor < list.size();
-		}
-
-		@Override
-		public E next() {
-			if (cursor == list.size())
-				throw new NoSuchElementException();
-
-			return list.get(cursor++);
-		}
+		return new ListIterator<E>();
 	}
 
 }
