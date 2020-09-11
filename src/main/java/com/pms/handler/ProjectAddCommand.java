@@ -1,26 +1,22 @@
 package com.pms.handler;
 
+import java.util.List;
+
 import com.pms.domain.Project;
-import com.pms.util.ArrayList;
-import com.pms.util.Iterator;
-import com.pms.util.List;
 import com.pms.util.Prompt;
 
+public class ProjectAddCommand implements Command{
 
+	private List<Project> projectList;
+	private MemberListCommand memberListCommand;
 
-public class ProjectHandler {
-	List<Project> projectList = new ArrayList<>();
-
-
-	MemberHandler memberHandler;
-
-	public ProjectHandler(List<Project> list, MemberHandler memberHandler) {
+	public ProjectAddCommand(List<Project> list, MemberListCommand memberListCommand) {
 		this.projectList = list;
-		this.memberHandler = memberHandler;
+		this.memberListCommand = memberListCommand;
 	}
 
-
-	public void add() {
+	@Override
+	public void execute() {
 		Project p = new Project();
 		System.out.println("[프로젝트 등록]");
 		p.setNum(Prompt.inputInt("번호: "));
@@ -34,7 +30,7 @@ public class ProjectHandler {
 			if (name.length() == 0) {
 				System.out.println("프로젝트 등록을 취소합니다.");
 				return;
-			} else if (memberHandler.findByName(name) != null) {
+			} else if (memberListCommand.findByName(name) != null) {
 				p.setOwner(name);
 				break;
 			}
@@ -46,7 +42,7 @@ public class ProjectHandler {
 			String name = Prompt.inputString("팀원: ");
 			if (name.length()  == 0) {
 				break;
-			} else if (memberHandler.findByName(name) != null) {
+			} else if (memberListCommand.findByName(name) != null) {
 				if (members.length() > 0) {
 					members.append(",");
 				}
@@ -57,18 +53,6 @@ public class ProjectHandler {
 		}
 		p.setMembers(members.toString());
 		projectList.add(p);
-	}
-
-
-	public void list() {
-		System.out.println("[프로젝트 목록]");
-		Iterator<Project> iterator = projectList.iterator();
-		while (iterator.hasNext()) {
-			Project p = iterator.next();
-			System.out.printf("%d, %s, %s, %s, %s, %s, %s\n",
-					p.getNum(),p.getTitel(),p.getContent(),p.getStart(),
-					p.getEnd(),p.getOwner(),p.getMembers());
-		}
 	}
 
 }
