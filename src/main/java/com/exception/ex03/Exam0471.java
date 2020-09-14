@@ -1,0 +1,31 @@
+package com.exception.ex03;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+public class Exam0471 {
+	static void m(int i) throws Exception, RuntimeException, SQLException, IOException {
+		if (i == 0)
+			throw new Exception();
+		else if (i == 1)
+			throw new RuntimeException();
+		else if (i == 2)
+			throw new SQLException();
+		else if (i == 3)
+			throw new IOException();
+		else if (i < 0)
+			throw new Error(); // 시스템 오류가 발생하다고 가정하자!
+	}
+
+	public static void main(String[] args) {
+		try {
+			m(-1);
+		} catch (Throwable e) {
+			System.out.println("애플리케이션 에러 발생");
+			// 이처럼 무심코 Throwable을 변수로 선언하면
+			// 시스템 오류인 Error까지 받기 때문에 예외 처리하는 문제가
+			// 시스템 오류는 애플리케이션에서 처리할 수 없다.
+		}
+	}
+
+}

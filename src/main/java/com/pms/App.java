@@ -2,6 +2,10 @@ package com.pms;
 
 
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -10,7 +14,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Queue;
+import java.util.Scanner;
 
 import com.pms.domain.Board;
 import com.pms.domain.Member;
@@ -45,11 +51,15 @@ import com.pms.util.Prompt;
 
 
 public class App {
+
+	static List<Board> boardList = new ArrayList<>();
+
 	public static void main(String[] args) {
+
+		loadBoards();
 
 		Map<String,Command> commandMap = new HashMap<>();
 
-		List<Board> boardList = new ArrayList<>();
 		commandMap.put("/board/add", new BoardAddCommand(boardList));
 		commandMap.put("/board/list", new BoardListCommand(boardList));
 		commandMap.put("/board/detail", new BoardDetailCommand(boardList));
@@ -102,7 +112,12 @@ public class App {
 				default:
 					Command command = commandMap.get(inputStr);
 					if (command != null) {
-						command.execute();
+						try {
+							command.execute();							
+						} catch (Exception e) {
+							System.out.printf("명령 처리 중 오류 발생 : %s\n%s\n",
+									e.getClass().getName(), e.getMessage());
+						}
 					} else {
 						System.out.println("실행할 수 없는 명령입니다.");
 
@@ -111,9 +126,10 @@ public class App {
 				System.out.println();
 			}
 		Prompt.close();
+		saveBoards();
 	}
 
-	private static void printCommandHistory(Iterator<String> iterator) {
+	static void printCommandHistory(Iterator<String> iterator) {
 		try {
 			int count = 1;
 			while (iterator.hasNext()) {
@@ -128,6 +144,60 @@ public class App {
 			}
 		} catch (Exception e) {
 			System.out.println("history중 오류발생!");
+		}
+	}
+
+	static void saveBoards() {
+		System.out.println("[게시글 저장]");
+
+		File file = new File("./board.csv"); 
+		FileWriter out = null;
+		try {
+			out = new FileWriter(file);
+			for (Board board : boardList) {
+				String record = String.format("%d, %s, %s, %s, %s, %d\n",
+						board.getNum(),
+						board.getTitel(),
+						board.getContent(),
+						board.getWriter(),
+						board.getRegisteredDate().toString(),
+						board.getViewCount());
+				out.write(record);
+			} 
+		} catch (IOException e) {
+			System.out.println("파일 출력 작업 중 오류가 발생!");
+		} finally {
+			try {
+				out.close();
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	static void loadBoards() {
+		System.out.println("[게시글 파일 로딩]");
+
+		File file = new File("./board.csv"); 
+		FileReader out = null;
+		Scanner scanner = null;
+		try {
+			out = new FileReader(file);
+			scanner = new Scanner(out);
+
+			while (true) {
+				try {
+					String record = scanner.nextLine();
+				} catch (NoSuchElementException e) {
+					break;
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("파일 출력 작업 중 오류가 발생!");
+		} finally {
+			try {
+				out.close();
+			} catch (Exception e) {
+			}
 		}
 	}
 }
