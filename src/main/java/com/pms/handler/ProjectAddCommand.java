@@ -39,12 +39,12 @@ public class ProjectAddCommand implements Command{
 
 		StringBuilder members = new StringBuilder();
 		while (true) {
-			String name = Prompt.inputString("팀원: ");
+			String name = Prompt.inputString("팀원:(완료: 빈문자열) ");
 			if (name.length()  == 0) {
 				break;
 			} else if (memberListCommand.findByName(name) != null) {
 				if (members.length() > 0) {
-					members.append(",");
+					members.append(":");
 				}
 				members.append(name);
 			} else {

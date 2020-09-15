@@ -47,4 +47,27 @@ public class Board {
 		this.registeredDate = registeredDate;
 	}
 
+
+	public String toCsvString() {
+		return String.format("%d,%s,%s,%s,%s,%d\n", 
+				this.getNum(),
+				this.getTitel(),
+				this.getContent(),
+				this.getWriter(),
+				this.getRegisteredDate().toString(),
+				this.getViewCount());
+	}
+
+	public static Board valueOfCsv(String csv) {
+		String[] values = csv.split(",");
+		Board board = new Board();
+		board.setNum(Integer.parseInt(values[0]));
+		board.setTitel(values[1]);
+		board.setContent(values[2]);
+		board.setWriter(values[3]);
+		board.setRegisteredDate(Date.valueOf(values[4]));
+		board.setViewCount(Integer.parseInt(values[5]));
+		return board;
+	}
+
 }

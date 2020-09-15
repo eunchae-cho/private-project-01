@@ -54,4 +54,28 @@ public class Project {
 		this.members = members;
 	}
 
+	public String toCsvString() {
+		return String.format("%d,%s,%s,%s,%s,%s,%s\n", 
+				this.getNum(),
+				this.getTitel(),
+				this.getContent(),
+				this.getStart().toString(),
+				this.getEnd().toString(),
+				this.getOwner(),
+				this.getMembers());
+	}
+
+	public static Project valueOfCsv(String csv) {
+		String[] values = csv.split(",");
+		Project project = new Project();
+		project.setNum(Integer.parseInt(values[0]));
+		project.setTitel(values[1]);
+		project.setContent(values[2]);
+		project.setStart(Date.valueOf(values[3]));
+		project.setEnd(Date.valueOf(values[4]));
+		project.setOwner(values[5]);
+		project.setMembers(values[6]);
+		return project;
+	}
+
 }

@@ -53,10 +53,20 @@ import com.pms.util.Prompt;
 public class App {
 
 	static List<Board> boardList = new ArrayList<>();
+	static List<Member> memberList = new ArrayList<>();
+	static List<Project> projectList = new LinkedList<>();
+	static List<Task> taskList = new LinkedList<>();
+	static File boardFile = new File("./board.csv"); 
+	static File memberFile = new File("./member.csv");
+	static File projectFile = new File("./project.csv");
+	static File taskFile = new File("./task.csv");
 
 	public static void main(String[] args) {
 
 		loadBoards();
+		loadMembers();
+		loadProjects();
+		loadTasks();
 
 		Map<String,Command> commandMap = new HashMap<>();
 
@@ -66,7 +76,6 @@ public class App {
 		commandMap.put("/board/update", new BoardUpdateCommand(boardList));
 		commandMap.put("/board/delete", new BoardDeleteCommand(boardList));
 
-		List<Member> memberList = new ArrayList<>();
 		MemberListCommand memberListCommand = new MemberListCommand(memberList);
 		commandMap.put("/member/add",new MemberAddCommand(memberList));
 		commandMap.put("/member/list", memberListCommand);
@@ -74,19 +83,17 @@ public class App {
 		commandMap.put("/member/update", new MemberUpdateCommand(memberList));
 		commandMap.put("/member/delete", new MemberDeleteCommand(memberList));
 
-		List<Project> projectList = new LinkedList<>();
-		commandMap.put("/prject/add", new ProjectAddCommand(projectList,memberListCommand));
-		commandMap.put("/prject/list", new ProjectListCommand(projectList));
-		commandMap.put("/prject/detail", new ProjectDetailCommand(projectList));
-		commandMap.put("/prject/update", new ProjectUpdateCommand(projectList,memberListCommand));
-		commandMap.put("/prject/delete", new ProjectDeleteCommand(projectList));
+		commandMap.put("/project/add", new ProjectAddCommand(projectList,memberListCommand));
+		commandMap.put("/project/list", new ProjectListCommand(projectList));
+		commandMap.put("/project/detail", new ProjectDetailCommand(projectList));
+		commandMap.put("/project/update", new ProjectUpdateCommand(projectList,memberListCommand));
+		commandMap.put("/project/delete", new ProjectDeleteCommand(projectList));
 
-		List<Task> taskList = new LinkedList<>();
-		commandMap.put("/taks/add", new TaskAddCommand(taskList,memberListCommand));
-		commandMap.put("/taks/list", new TaskListCommand(taskList));
-		commandMap.put("/taks/detail", new TaskDetailCommand(taskList));
-		commandMap.put("/taks/update", new TaskUpdateCommand(taskList,memberListCommand));
-		commandMap.put("/taks/delete", new TaskDeleteCommand(taskList));
+		commandMap.put("/task/add", new TaskAddCommand(taskList,memberListCommand));
+		commandMap.put("/task/list", new TaskListCommand(taskList));
+		commandMap.put("/task/detail", new TaskDetailCommand(taskList));
+		commandMap.put("/task/update", new TaskUpdateCommand(taskList,memberListCommand));
+		commandMap.put("/task/delete", new TaskDeleteCommand(taskList));
 
 		commandMap.put("hello", new HelloCommand());
 
@@ -127,6 +134,9 @@ public class App {
 			}
 		Prompt.close();
 		saveBoards();
+		saveMembers();
+		saveProjects();
+		saveTasks();
 	}
 
 	static void printCommandHistory(Iterator<String> iterator) {
@@ -150,54 +160,179 @@ public class App {
 	static void saveBoards() {
 		System.out.println("[게시글 저장]");
 
-		File file = new File("./board.csv"); 
 		FileWriter out = null;
 		try {
-			out = new FileWriter(file);
+			out = new FileWriter(boardFile);
+
 			for (Board board : boardList) {
-				String record = String.format("%d, %s, %s, %s, %s, %d\n",
-						board.getNum(),
-						board.getTitel(),
-						board.getContent(),
-						board.getWriter(),
-						board.getRegisteredDate().toString(),
-						board.getViewCount());
-				out.write(record);
-			} 
+
+				out.write(board.toCsvString()); 
+			}
 		} catch (IOException e) {
 			System.out.println("파일 출력 작업 중 오류가 발생!");
 		} finally {
 			try {
 				out.close();
-			} catch (Exception e) {
-			}
+			} catch (Exception e) {}
 		}
 	}
 
 	static void loadBoards() {
 		System.out.println("[게시글 파일 로딩]");
 
-		File file = new File("./board.csv"); 
 		FileReader out = null;
 		Scanner scanner = null;
 		try {
-			out = new FileReader(file);
+			out = new FileReader(boardFile);
 			scanner = new Scanner(out);
 
 			while (true) {
 				try {
-					String record = scanner.nextLine();
+					boardList.add(Board.valueOfCsv(scanner.nextLine()));
 				} catch (NoSuchElementException e) {
 					break;
 				}
+			}
+		} catch (IOException e) {
+			System.out.println("파일 읽기 작업 중 오류가 발생!");
+		} finally {
+			try {scanner.close();} catch (Exception e) {}
+			try {out.close();} catch (Exception e) {}
+		}
+	}
+
+
+
+
+
+	static void saveMembers() {
+		System.out.println("[회원 저장]");
+
+		FileWriter out = null;
+		try {
+			out = new FileWriter(memberFile);
+
+			for (Member member : memberList) {
+				out.write(member.toCsvString()); 
+			}
+		} catch (IOException e) {
+			System.out.println("파일 출력 작업 중 오류가 발생!");
+			System.out.println(e.getMessage());
+		} finally {
+			try {
+				out.close();
+			} catch (Exception e) {}
+		}
+	}
+
+	static void loadMembers() {
+		System.out.println("[회원 파일 로딩]");
+
+		FileReader out = null;
+		Scanner scanner = null;
+		try {
+			out = new FileReader(memberFile);
+			scanner = new Scanner(out);
+
+			while (true) {
+				try {
+					memberList.add(Member.valueOfCsv(scanner.nextLine()));
+				} catch (NoSuchElementException e) {
+					break;
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("파일 읽기 작업 중 오류가 발생!");
+		} finally {
+			try {scanner.close();} catch (Exception e) {}
+			try {out.close();} catch (Exception e) {}
+		}
+	}
+
+	static void saveProjects() {
+		System.out.println("[프로젝트 저장]");
+
+		FileWriter out = null;
+		try {
+			out = new FileWriter(projectFile);
+
+			for (Project project : projectList) {
+				out.write(project.toCsvString()); 
 			}
 		} catch (IOException e) {
 			System.out.println("파일 출력 작업 중 오류가 발생!");
 		} finally {
 			try {
 				out.close();
-			} catch (Exception e) {
-			}
+			} catch (Exception e) {}
 		}
 	}
+
+	static void loadProjects() {
+		System.out.println("[프로젝트 파일 로딩]");
+
+		FileReader out = null;
+		Scanner scanner = null;
+		try {
+			out = new FileReader(projectFile);
+			scanner = new Scanner(out);
+
+			while (true) {
+				try {
+					projectList.add(Project.valueOfCsv(scanner.nextLine()));
+				} catch (NoSuchElementException e) {
+					break;
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("파일 읽기 작업 중 오류가 발생!");
+		} finally {
+			try {scanner.close();} catch (Exception e) {}
+			try {out.close();} catch (Exception e) {}
+		}
+	}
+
+	static void saveTasks() {
+		System.out.println("[임무 저장]");
+
+		FileWriter out = null;
+		try {
+			out = new FileWriter(taskFile);
+
+			for (Task task : taskList) {
+				out.write(task.toCsvString()); 
+			}
+		} catch (IOException e) {
+			System.out.println("파일 출력 작업 중 오류가 발생!");
+		} finally {
+			try {
+				out.close();
+			} catch (Exception e) {}
+		}
+	}
+
+	static void loadTasks() {
+		System.out.println("[임무 저장]");
+
+		FileReader out = null;
+		Scanner scanner = null;
+		try {
+			out = new FileReader(taskFile);
+			scanner = new Scanner(out);
+
+			while (true) {
+				try {
+					taskList.add(Task.valueOfCsv(scanner.nextLine()));
+				} catch (NoSuchElementException e) {
+					break;
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("파일 읽기 작업 중 오류가 발생!");
+		} finally {
+			try {scanner.close();} catch (Exception e) {}
+			try {out.close();} catch (Exception e) {}
+		}
+	}
+
 }
