@@ -1,8 +1,10 @@
 package com.pms.domain;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Project {
+public class Project implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int num;
 	private String titel;
 	private String content;
