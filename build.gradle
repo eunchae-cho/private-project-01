@@ -7,6 +7,9 @@
  */
 
 plugins {
+    // Apply the eclipse plugin to add support for eclipsex
+    id 'eclipse'
+    
     // Apply the java plugin to add support for Java
     id 'java'
 
