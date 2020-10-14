@@ -1,17 +1,19 @@
 package com.eomcs.listener;
 
-import com.eomcs.context.ApplicationContextListener;
+import java.util.Map;
 
-public class AppInitListener implements ApplicationContextListener {
+import com.eomcs.context.AppContextListener;
+
+public class AppInitListener implements AppContextListener {
 
 	@Override
-	public void contextInitialized() {
+	public void contextInitialized(Map<String,Object> context) {
 		System.out.println("환영합니다!");
 		System.out.println("프로그램을 시작합니다:)");
 	}
 
 	@Override
-	public void contextDestoryed() {
+	public void contextDestoryed(Map<String, Object> context) {
 		System.out.println("프로그램을 마칩니다!");
 		System.out.println("감사합니다:)");
 	}

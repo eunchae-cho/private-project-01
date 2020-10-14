@@ -1,25 +1,19 @@
 package com.eomcs.pms;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import com.eomcs.context.ApplicationContextListener;
+import com.eomcs.context.AppContextListener;
 import com.eomcs.listener.AppInitListener;
+import com.eomcs.listener.DataHandlerListener;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
@@ -47,59 +41,48 @@ import com.eomcs.pms.handler.TaskDetailCommand;
 import com.eomcs.pms.handler.TaskListCommand;
 import com.eomcs.pms.handler.TaskUpdateCommand;
 import com.eomcs.util.Prompt;
-import com.google.gson.Gson;
 
 public class App {
 
-	List<ApplicationContextListener> listeners = new ArrayList<>();
+	Map<String, Object> context = new Hashtable<>();
+	List<AppContextListener> listeners = new ArrayList<>();
 
-	public void addApplicationContextListener(ApplicationContextListener listener) {
+	public void addApplicationContextListener(AppContextListener listener) {
 		listeners.add(listener);
 	}
 
-	public void removeApplicationContextListener(ApplicationContextListener listener) {
+	public void removeApplicationContextListener(AppContextListener listener) {
 		listeners.remove(listener);
 	}
 
-	private void notifyApplicationContextListenerOnServiceStarted() {
-		for (ApplicationContextListener listener : listeners) {
-			listener.contextInitialized();
+	private void notifyAppContextListenerOnServiceStarted() {
+		for (AppContextListener listener : listeners) {
+			listener.contextInitialized(context);
 		}
 	}
 
-	private void notifyApplicationContextListenerOnServiceStopped() {
-		for (ApplicationContextListener listener : listeners) {
-			listener.contextDestoryed();
+	private void notifyAppContextListenerOnServiceStopped() {
+		for (AppContextListener listener : listeners) {
+			listener.contextDestoryed(context);
 		}
-	}
+	}   
 
 	public static void main(String[] args) {
 		App app = new App();
 		app.addApplicationContextListener(new AppInitListener());
+		app.addApplicationContextListener(new DataHandlerListener());
 		app.service();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void service() {
 
-		notifyApplicationContextListenerOnServiceStarted();
+		notifyAppContextListenerOnServiceStarted();
 
-		List<Board> boardList = new ArrayList<>();
-		File boardFile = new File("./board.json"); // 게시글을 저장할 파일 정보
-
-		List<Member> memberList = new LinkedList<>();
-		File memberFile = new File("./member.json"); // 회원을 저장할 파일 정보
-
-		List<Project> projectList = new LinkedList<>();
-		File projectFile = new File("./project.json"); // 프로젝트를 저장할 파일 정보
-
-		List<Task> taskList = new ArrayList<>();
-		File taskFile = new File("./task.json"); // 작업을 저장할 파일 정보
-
-		// 파일에서 데이터 로딩
-		loadObjects(boardList, boardFile, Board[].class);
-		loadObjects(memberList, memberFile, Member[].class);
-		loadObjects(projectList, projectFile, Project[].class);
-		loadObjects(taskList, taskFile, Task[].class);
+		List<Board> boardList = (List<Board>) context.get("boardList");
+		List<Member> memberList = (List<Member>) context.get("memberList");
+		List<Project> projectList = (List<Project>) context.get("projectList");
+		List<Task> taskList = (List<Task>) context.get("taskList");
 
 		Map<String,Command> commandMap = new HashMap<>();
 
@@ -159,9 +142,9 @@ public class App {
 							command.execute();
 						} catch (Exception e) {
 							// 오류가 발생하면 그 정보를 갖고 있는 객체의 클래스 이름을 출력한다.
-							System.out.println("--------------------------------------------------------------");
+							System.out.println("-------------------------------------------------");
 							System.out.printf("명령어 실행 중 오류 발생: %s\n", e);
-							System.out.println("--------------------------------------------------------------");
+							System.out.println("-------------------------------------------------");
 						}
 					} else {
 						System.out.println("실행할 수 없는 명령입니다.");
@@ -172,13 +155,7 @@ public class App {
 
 		Prompt.close();
 
-		// 데이터를 파일에 저장
-		saveObjects(boardList, boardFile);
-		saveObjects(memberList, memberFile);
-		saveObjects(projectList, projectFile);
-		saveObjects(taskList, taskFile);
-
-		notifyApplicationContextListenerOnServiceStopped();
+		notifyAppContextListenerOnServiceStopped();
 	}
 
 	void printCommandHistory(Iterator<String> iterator) {
@@ -197,60 +174,6 @@ public class App {
 		}
 	}
 
-	// 이제 더이상 저장할 객체를 CsvObject로 제한할 필요가 없다.
-	// 어떤 타입의 객체든지 JSON 형식으로 변환할 수 있기 때문이다.
-	private void saveObjects(Collection<?> list, File file) {
-		BufferedWriter out = null;
 
-		try {
-			out = new BufferedWriter(new FileWriter(file));
 
-			// 컬렉션 객체를 통째로 JSON 문자열로 내보내기
-			Gson gson = new Gson();
-			String jsonStr = gson.toJson(list);
-			out.write(jsonStr);
-
-			out.flush();
-
-			System.out.printf("총 %d 개의 객체를 '%s' 파일에 저장했습니다.\n",
-					list.size(), file.getName());
-
-		} catch (IOException e) {
-			System.out.printf("객체를 '%s' 파일에  쓰는 중 오류 발생! - %s\n",
-					file.getName(), e.getMessage());
-
-		} finally {
-			try {
-				out.close();
-			} catch (IOException e) {
-			}
-		}
-	}
-
-	// 파일에서 JSON 문자열을 읽어 지정한 타입의 객체를 생성한 후 컬렉션에 저장한다.
-	private <T> void loadObjects(
-			Collection<T> list, // 객체를 담을 컬렉션
-			File file, // JSON 문자열이 저장된 파일
-			Class<T[]> clazz // JSON 문자열을 어떤 타입의 배열로 만들 것인지 알려주는 클래스 정보
-			) {
-		BufferedReader in = null;
-
-		try {
-			in = new BufferedReader(new FileReader(file));
-			list.addAll(Arrays.asList(new Gson().fromJson(in, clazz)));
-
-			System.out.printf("'%s' 파일에서 총 %d 개의 객체를 로딩했습니다.\n",
-					file.getName(), list.size());
-
-		} catch (Exception e) {
-			System.out.printf("'%s' 파일 읽기 중 오류 발생! - %s\n",
-					file.getName(), e.getMessage());
-
-		} finally {
-			try {
-				in.close();
-			} catch (Exception e) {
-			}
-		}
-	}
 }
