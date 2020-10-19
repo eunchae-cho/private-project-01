@@ -74,7 +74,7 @@ public class Exam0210 {
 		public MyThread get() {
 			if (list.size() > 0) {
 				return list.remove(0);
-			} 
+			}   
 			return null;
 		}
 
