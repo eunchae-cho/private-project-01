@@ -35,7 +35,11 @@ public class Exam0520 {
 		executorService.execute(new MyRunnable(4000));
 		executorService.execute(new MyRunnable(11000));
 
-		executorService.shutdown();
+		if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+			System.out.println("아직 종료 하지 않은 작업이 있음");
+			System.out.println("남아 있는 작업의 강제 종료 시도");
+		}
+		executorService.shutdownNow();
 
 		if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
 			System.out.println("아직 종료 하지 않은 작업이 있음");
